@@ -69,8 +69,13 @@ valType LowPassFilter<valType>::read(valType input)
   unsigned long currentTime = millis();
   if ((unsigned long)(currentTime - previousTime) >= dt || !intervalCheck)
   {
-    double output = previousOutput + sf * (input - previousOutput);
-    previousOutput = output;
+    int n = (currentTime-previousTime) / dt;
+    double output;
+    for(int i = 0; i < n; i++)
+    {
+      output = previousOutput + sf * (input - previousOutput);
+      previousOutput = output;
+    }
     previousTime = currentTime;
     return output;
   }
