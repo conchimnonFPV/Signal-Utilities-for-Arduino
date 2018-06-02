@@ -4,9 +4,10 @@ This library gives you the ability to filter out unwanted, fast changes from you
 ## Usage
 Firstly, you need to declare LowPassFilter object:
 ```cpp
-SigUtil::LowPassFilter<int> filter(0.2, 20); //where <int> is the variable type expected and returned by the filter
-                                             //0.2 is the smoothig factor (double)
-                                             //20 is the interval time in milliseconds (unsigned int)
+SigUtil::LowPassFilter<int> filter(0.2, 20); 
+//where <int> is the variable type expected and returned by the filter
+//0.2 is the smoothig factor (double)
+//20 is the interval time in milliseconds (unsigned int)
 ```
 Then you should use:
 ```cpp
