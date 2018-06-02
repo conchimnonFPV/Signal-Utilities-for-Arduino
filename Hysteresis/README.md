@@ -1,5 +1,5 @@
 # Hysteresis for Arduino
-
+This library allows you to add some space around switching point of some signal to prevent it from changing rapidly in short time intervals which is useful i.e for water pumps where switching should happen rarely to not destroy the pump.<br /> 
 ## Usage
 Firstly, you need to declare Hysteresis object:
 ```cpp
