@@ -8,7 +8,7 @@ SigUtil::LowPassFilter<int> filter(0.2, 20); //where <int> is the variable type 
                                              //0.2 is the smoothig factor (double)
                                              //20 is the interval time in milliseconds (unsigned int)
 ```
-Then you should use
+Then you should use:
 ```cpp
 filteredVal = filter.read(someVal); //(<int>) expects (<int>)
 ```
