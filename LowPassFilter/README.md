@@ -14,7 +14,7 @@ filteredVal = filter.read(someVal); (<int>) expects (<int>)
 ```
 You should use read() as often as you can as this library is designed to be used in non-stopping manner.
 
-Additional functions: <br />
+### Additional functions: <br />
 You can disable internal interval check i.e if you want to use read() inside timer's interrupt routine
 ```cpp
 filter.disableIntervalCheck(); (void) expects nothing
