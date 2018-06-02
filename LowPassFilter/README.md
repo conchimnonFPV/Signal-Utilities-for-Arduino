@@ -4,22 +4,22 @@ This library gives you the ability to filter out unwanted, fast changes from you
 ## Usage
 Firstly, you need to declare LowPassFilter object:
 ```cpp
-SigUtil::LowPassFilter<int> filter(0.2, 20);//where <int> is the variable type expected and returned by the filter
-                                            //0.2 is the smoothig factor (double)
-                                            //20 is the interval time in milliseconds (unsigned int)
+SigUtil::LowPassFilter<int> filter(0.2, 20); //where <int> is the variable type expected and returned by the filter
+                                             //0.2 is the smoothig factor (double)
+                                             //20 is the interval time in milliseconds (unsigned int)
 ```
 Then you should use
 ```cpp
-filteredVal = filter.read(someVal); (<int>) expects (<int>)
+filteredVal = filter.read(someVal); //(<int>) expects (<int>)
 ```
 You should use read() as often as you can as this library is designed to be used in non-stopping manner.
 
 ### Additional functions: <br />
 You can disable internal interval check i.e if you want to use read() inside timer's interrupt routine
 ```cpp
-filter.disableIntervalCheck(); (void) expects nothing
-filter.enableIntervalCheck(); (void) expects nothins
-filter.intervalCheckEnabled(); (bool) expects nothing
+filter.disableIntervalCheck(); //(void) expects nothing
+filter.enableIntervalCheck(); //(void) expects nothins
+filter.intervalCheckEnabled(); //(bool) expects nothing
 ```
 Interval check is enabled by default. <br />
 
