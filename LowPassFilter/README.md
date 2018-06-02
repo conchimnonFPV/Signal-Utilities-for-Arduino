@@ -6,7 +6,7 @@ Firstly, you need to declare LowPassFilter object:
 ```cpp
 SigUtil::LowPassFilter<int> filter(0.2, 20);//where <int> is the variable type expected and returned by the filter
                                             //0.2 is the smoothig factor
-                                            //20 is the sampling rate.
+                                            //20 is the interval time in milliseconds
 ```
 Then you should use
 ```cpp
