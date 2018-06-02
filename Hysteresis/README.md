@@ -20,15 +20,18 @@ boolVal = hysteresis.read(intVal); //(<bool>) expects (<int>)
 #include <Hysteresis.h>
 int led = 13;
 int pot = A0;
-SigUtil::Hysteresis<int,bool> hysteresis(256, 512, 0, 1);//on led when pot above 512
-                                                         //off led when below 256
-                                                         //do not change state when between.
 
+//on led when pot above 512
+//off led when below 256
+//do not change state when between.
+SigUtil::Hysteresis<int,bool> hysteresis(256, 512, 0, 1);
+                                                       
 void setup()
 {
   pinMode(led,OUTPUT);
   pinMode(pot,INPUT);
 }
+
 void loop()
 {
   int potVal = analogRead(pot);
