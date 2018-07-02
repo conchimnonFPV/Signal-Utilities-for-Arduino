@@ -8,44 +8,69 @@ template <typename valType>
 class LowPassFilter
 {
 private:
-  bool intervalCheck = 1;
-  double sf;
-  unsigned int dt;
+  bool intervalCheck = true;
+  bool enabled = false;
+
+  unsigned long previousTime = 0;
+  valType previousOutput = 0;
+
+  void update(double _sf, unsigned int _dt);
 
 public:
-  LowPassFilter(double _sf, unsigned int _dt);
+  double smoothingFactor;
+  unsigned int dt;
+
+  void begin(double _sf, unsigned int _dt);
+  void reset();
+  void end();
 
   void disableIntervalCheck();
   void enableIntervalCheck();
-
-  void setSmoothingFactor(double _sf);
-
   bool intervalCheckEnabled();
-  double getSmoothingFactor();
 
   valType read(valType input);
 };
 
 template <typename valType>
-LowPassFilter<valType>::LowPassFilter(double _sf, unsigned int _dt)
-    : sf(_sf), dt(_dt) {}
+void LowPassFilter<valType>::update(double _sf, unsigned int _dt)
+{
+  smoothingFactor = _sf;
+  dt = _dt;
+}
+
+template <typename valType>
+void LowPassFilter<valType>::begin(double _sf, unsigned int _dt)
+{
+  reset();
+  update(_sf, _dt);
+  enabled = true;
+}
+
+template <typename valType>
+void LowPassFilter<valType>::reset()
+{
+  previousOutput = 0;
+  previousTime = 0;
+}
+
+template <typename valType>
+void LowPassFilter<valType>::end()
+{
+  reset();
+  update(0, 0);
+  enabled = false;
+}
 
 template <typename valType>
 void LowPassFilter<valType>::disableIntervalCheck()
 {
-  intervalCheck = 0;
+  intervalCheck = false;
 }
 
 template <typename valType>
 void LowPassFilter<valType>::enableIntervalCheck()
 {
-  intervalCheck = 1;
-}
-
-template <typename valType>
-void LowPassFilter<valType>::setSmoothingFactor(double _sf)
-{
-  sf = _sf;
+  intervalCheck = true;
 }
 
 template <typename valType>
@@ -55,26 +80,20 @@ bool LowPassFilter<valType>::intervalCheckEnabled()
 }
 
 template <typename valType>
-double LowPassFilter<valType>::getSmoothingFactor()
-{
-  return sf;
-}
-
-template <typename valType>
 valType LowPassFilter<valType>::read(valType input)
 {
-  static unsigned long previousTime = 0;
-  static valType previousOutput = 0;
+  if(!enabled)
+    return 0;
 
   unsigned long currentTime = millis();
   if ((unsigned long)(currentTime - previousTime) >= dt || !intervalCheck)
   {
-    double output = previousOutput + sf * (input - previousOutput);
+    double output = previousOutput + smoothingFactor * (input - previousOutput);
     previousOutput = output;
     previousTime = currentTime;
     return output;
   }
-  return previousOutput;
+  return previousOutput;//zero hold order
 }
 }
 #endif

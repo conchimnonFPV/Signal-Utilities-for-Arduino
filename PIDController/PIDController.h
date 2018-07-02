@@ -2,82 +2,92 @@
 #define PID_CONTROLLER_H
 
 #include <Arduino.h>
+
 namespace SigUtil
 {
 template <typename inputType, typename returnType>
 class PIDController
 {
   private:
-    bool intervalCheck = 1;
-    unsigned int dt;
+    bool intervalCheck = true;
+    bool enabled = false;
 
-    inputType setpoint = 0;
+    unsigned long previousTime = 0;
+    inputType previousErr = 0;
+    inputType integral = 0;
+    returnType previousControllVal = 0;
 
-    double kp;
-    double ki;
-    double kd;
-
-    returnType lowerSaturation;
-    returnType upperSaturation;
+    void update(double _kp, double _ki, double _kd, returnType ls, returnType us, unsigned int _dt);
 
   public:
-    PIDController(double _kp, double _ki, double _kd, returnType ls, returnType hs, unsigned int _dt);
+    double kp = 0;
+    double ki = 0;
+    double kd = 0;
+    unsigned int dt;
+    returnType lowerSaturation = 0;
+    returnType upperSaturation = 0;
+    inputType setpoint = 0;
+
+    void begin(double _kp, double _ki, double _kd, returnType ls, returnType us, unsigned int _dt);
+    void reset();
+    void end();
 
     void disableIntervalCheck();
     void enableIntervalCheck();
-
-    void setKp(double _kp);
-    void setKi(double _ki);
-    void setKd(double _kd);
-    void setSetpoint(inputType _sp);
-
     bool intervalCheckEnabled();
-    double getKp();
-    double getKi();
-    double getKd();
-    inputType getSetpoint();
 
     returnType read(inputType pv);
 };
 
 template <typename inputType, typename returnType>
-PIDController<inputType, returnType>::PIDController(double _kp, double _ki, double _kd, returnType ls, returnType hs, unsigned int _dt)
-    : kp(_kp), ki(_ki), kd(_kd), lowerSaturation(ls), upperSaturation(hs), dt(_dt) {}
+void PIDController<inputType, returnType>::update(double _kp, double _ki, double _kd, returnType ls, returnType us, unsigned int _dt)
+{
+    kp = _kp;
+    ki = _ki;
+    kd = _kd;
+    lowerSaturation = ls;
+    upperSaturation = us;
+    dt = _dt;
+}
+
+template <typename inputType, typename returnType>
+void PIDController<inputType, returnType>::begin(double _kp, double _ki, double _kd, returnType ls, returnType us, unsigned int _dt)
+{
+    reset();
+    update(_kp, _ki, _kd, ls, us, _dt);
+    setpoint = 0;
+    enabled = true;
+}
+
+template <typename inputType, typename returnType>
+void PIDController<inputType, returnType>::end()
+{
+    reset();
+    update(0, 0, 0, 0, 0, 0);
+    setpoint = 0;
+    enabled = false;
+}
+
+template <typename inputType, typename returnType>
+void PIDController<inputType, returnType>::reset()
+{
+    previousTime = 0;
+    previousErr = 0;
+    integral = 0;
+    previousIntegral = 0;
+    previousControllVal = 0;
+}
 
 template <typename inputType, typename returnType>
 void PIDController<inputType, returnType>::disableIntervalCheck()
 {
-    intervalCheck = 0;
+    intervalCheck = false;
 }
 
 template <typename inputType, typename returnType>
 void PIDController<inputType, returnType>::enableIntervalCheck()
 {
-    intervalCheck = 1;
-}
-
-template <typename inputType, typename returnType>
-void PIDController<inputType, returnType>::setKp(double _kp)
-{
-    kp = _kp;
-}
-
-template <typename inputType, typename returnType>
-void PIDController<inputType, returnType>::setKi(double _ki)
-{
-    ki = _ki;
-}
-
-template <typename inputType, typename returnType>
-void PIDController<inputType, returnType>::setKd(double _kd)
-{
-    kd = _kd;
-}
-
-template <typename inputType, typename returnType>
-void PIDController<inputType, returnType>::setSetpoint(inputType _sp)
-{
-    setpoint = _sp;
+    intervalCheck = true;
 }
 
 template <typename inputType, typename returnType>
@@ -87,56 +97,49 @@ bool PIDController<inputType, returnType>::intervalCheckEnabled()
 }
 
 template <typename inputType, typename returnType>
-double PIDController<inputType, returnType>::getKp()
-{
-    return kp;
-}
-
-template <typename inputType, typename returnType>
-double PIDController<inputType, returnType>::getKi()
-{
-    return ki;
-}
-
-template <typename inputType, typename returnType>
-double PIDController<inputType, returnType>::getKd()
-{
-    return kd;
-}
-
-template <typename inputType, typename returnType>
-inputType PIDController<inputType, returnType>::getSetpoint()
-{
-    return setpoint;
-}
-
-template <typename inputType, typename returnType>
 returnType PIDController<inputType, returnType>::read(inputType pv)
 {
-    static unsigned long previousTime = 0;
-    static inputType previousErr = 0;
-    static inputType integral = 0;
-    static returnType previousControllVal = 0;
-
+    if(!enabled)
+        return 0;
+        
     unsigned long currentTime = millis();
     if ((unsigned long)(currentTime - previousTime) >= dt || !intervalCheck)
     {
+        //basic pid computing
         inputType err = setpoint - pv;
         integral = integral + err * (inputType)dt;
         inputType derivative = (err - previousErr) / (inputType)dt;
         returnType controllVal = kp * err + ki * integral + kd * derivative;
 
+        //saturation and integral clamping
         if (controllVal > upperSaturation)
-            controllVal = upperSaturation;
+        {
+            controllVal = upperSaturation;//saturate output
+
+            //this if statement is experimental
+            //apparently this metod (if I implemented it properly) is found to be the best
+            //method of integral clamping
+            //but still it needs some testing
+            if(err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
+                integral = integral - err*(inputType)dt;//revert changes to integral made in this iteration
+        }
         else if (controllVal < lowerSaturation)
+        {
             controllVal = lowerSaturation;
 
+            //same as above
+            if(err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
+                integral = integral - err*(inputType)dt;
+        }
+
+        //save current stuff for next iteration
         previousErr = err;
         previousControllVal = controllVal;
         previousTime = currentTime;
+
         return controllVal;
     }
-    return previousControllVal;
+    return previousControllVal; //zero order hold
 }
 }
 #endif
