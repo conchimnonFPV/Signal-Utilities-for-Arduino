@@ -1,6 +1,6 @@
 # DeadBand
 
-Sets output to 0 when given value is between lowBound and highBound and doesn't change it if otherwise
+Sets output to 0 when given value is between lowBound and highBound and doesn't change it if otherwise.
 
 ## Contents
 
