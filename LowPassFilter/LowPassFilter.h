@@ -9,7 +9,6 @@ class LowPassFilter
 {
 private:
   bool intervalCheck = true;
-  bool enabled = false;
 
   unsigned long previousTime = 0;
   valType previousOutput = 0;
@@ -43,7 +42,6 @@ void LowPassFilter<valType>::begin(double _sf, unsigned int _dt)
 {
   reset();
   update(_sf, _dt);
-  enabled = true;
 }
 
 template <typename valType>
@@ -58,7 +56,6 @@ void LowPassFilter<valType>::end()
 {
   reset();
   update(0, 0);
-  enabled = false;
 }
 
 template <typename valType>
@@ -82,9 +79,6 @@ bool LowPassFilter<valType>::intervalCheckEnabled()
 template <typename valType>
 valType LowPassFilter<valType>::read(valType input)
 {
-  if(!enabled)
-    return 0;
-
   unsigned long currentTime = millis();
   if ((unsigned long)(currentTime - previousTime) >= dt || !intervalCheck)
   {

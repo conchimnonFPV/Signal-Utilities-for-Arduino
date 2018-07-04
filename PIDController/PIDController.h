@@ -10,7 +10,6 @@ class PIDController
 {
   private:
     bool intervalCheck = true;
-    bool enabled = false;
 
     unsigned long previousTime = 0;
     inputType previousErr = 0;
@@ -56,7 +55,6 @@ void PIDController<inputType, returnType>::begin(double _kp, double _ki, double 
     reset();
     update(_kp, _ki, _kd, ls, us, _dt);
     setpoint = 0;
-    enabled = true;
 }
 
 template <typename inputType, typename returnType>
@@ -65,7 +63,6 @@ void PIDController<inputType, returnType>::end()
     reset();
     update(0, 0, 0, 0, 0, 0);
     setpoint = 0;
-    enabled = false;
 }
 
 template <typename inputType, typename returnType>
@@ -74,7 +71,6 @@ void PIDController<inputType, returnType>::reset()
     previousTime = 0;
     previousErr = 0;
     integral = 0;
-    previousIntegral = 0;
     previousControllVal = 0;
 }
 
@@ -98,10 +94,7 @@ bool PIDController<inputType, returnType>::intervalCheckEnabled()
 
 template <typename inputType, typename returnType>
 returnType PIDController<inputType, returnType>::read(inputType pv)
-{
-    if(!enabled)
-        return 0;
-        
+{       
     unsigned long currentTime = millis();
     if ((unsigned long)(currentTime - previousTime) >= dt || !intervalCheck)
     {
@@ -117,7 +110,7 @@ returnType PIDController<inputType, returnType>::read(inputType pv)
             controllVal = upperSaturation;//saturate output
 
             //this if statement is experimental
-            //apparently this metod (if I implemented it properly) is found to be the best
+            //apparently this metod (if I implemented it properly) is proven to be the best
             //method of integral clamping
             //but still it needs some testing
             if(err > 0 && controllVal > 0 || err < 0 && controllVal < 0)

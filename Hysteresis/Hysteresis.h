@@ -6,11 +6,9 @@ template <typename inType, typename outType>
 class Hysteresis
 {
   private:
-    bool enabled = false;
-
     bool on = false;
 
-    update(inType _lowBound, inType _highBound, outType _offVal, outType _onVal);
+    void update(inType _lowBound, inType _highBound, outType _offVal, outType _onVal);
 
   public:
     outType offVal = 0;
@@ -21,12 +19,13 @@ class Hysteresis
     void begin(inType _lowBound, inType _highBound, outType _offVal, outType _onVal);
     void reset();
     void end();
-
+    void forceOn();
+    void forceOff();
     outType read(inType val);
 };
 
 template <typename inType, typename outType>
-outType Hysteresis<inType, outType>::update(inType _lowBound, inType _highBound, outType _offVal, outType _onVal)
+void Hysteresis<inType, outType>::update(inType _lowBound, inType _highBound, outType _offVal, outType _onVal)
 {
     lowBound = _lowBound;
     highBound = _highBound;
@@ -35,33 +34,39 @@ outType Hysteresis<inType, outType>::update(inType _lowBound, inType _highBound,
 }
 
 template <typename inType, typename outType>
-outType Hysteresis<inType, outType>::begin(inType _lowBound, inType _highBound, outType _offVal, outType _onVal)
+void Hysteresis<inType, outType>::begin(inType _lowBound, inType _highBound, outType _offVal, outType _onVal)
 {
     reset();
     update(_lowBound, _highBound, _offVal, _onVal);
-    enabled = true;
 }
 
 template <typename inType, typename outType>
-outType Hysteresis<inType, outType>::reset()
+void Hysteresis<inType, outType>::reset()
 {
     on = false;
 }
 
 template <typename inType, typename outType>
-outType Hysteresis<inType, outType>::end()
+void Hysteresis<inType, outType>::end()
 {
     reset();
     update(0,0,0,0);
-    enabled = false;
+}
+template <typename inType, typename outType>
+void Hysteresis<inType, outType>::forceOn()
+{
+    on = true;
+}
+
+template <typename inType, typename outType>
+void Hysteresis<inType, outType>::forceOff()
+{
+    on = false;
 }
 
 template <typename inType, typename outType>
 outType Hysteresis<inType, outType>::read(inType val)
 {
-    if(!enabled)
-        return 0;
-
     if (val >= highBound)
         on = true;
     else if (val <= lowBound)
