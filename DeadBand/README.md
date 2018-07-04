@@ -1,10 +1,13 @@
 # DeadBand
+
+Sets output to 0 when given value is between lowBound and highBound and doesn't change it if otherwise
+
+## Contents
+
 | DeadBand                                                     |
 |--------------------------------------------------------------|
 | + lowBound: T <br /> + highBound: T                          |
 | + begin(T, T): void <br /> + end(): void <br /> + read(T): T |
-
-Sets output to 0 when given value is between lowBound and highBound and doesn't change it if otherwise
 
 ## Usage
 #### DeadBand variable initializer:
