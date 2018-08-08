@@ -31,8 +31,12 @@ class ExponentialRegulator
 template <typename T>
 void ExponentialRegulator<T>::start(T startVal, T _endVal, unsigned long _endTime)
 {
-    if(startVal < 0 || endVal < 0 || _endTime == 0)
+    if(startVal < 0 || _endVal < 0 || _endTime == 0)
+    {
+        if(_endTime == 0 && _endVal >= 0)
+            currentVal = _endVal;
         return;
+    }
 
     endVal = _endVal;
     endTime = _endTime;
