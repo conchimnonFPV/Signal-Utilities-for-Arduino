@@ -16,35 +16,25 @@ template<typename T>
 DeadBand;
 ```
 **T:** type of your input/output variable<br/>
-<br/>
-
-#### Lower bound of DeadBand variable:
-```cpp
-T lowBound;
-```
-<br/>
-
-### Upper bound of DeadBand variable:
-```cpp
-T highBound;
-```
-<br/>
+***
 
 #### Set lowBound and highBound to given values:
 ```cpp
 void begin(T lowBound, T highBound);
 ```
-<br/>
+***
 
 #### Set lowBound and highBound to 0:
 ```cpp
 void end();
 ```
-<br/>
+***
 
 #### Process given value through DeadBand:
 ```cpp
 T read(T input);
 ```
-**input:** your input value<br/>
-**returns:** result of proccessing your input through DeadBand
++ **input:** your input value<br/>
+
+
++ **returns:** result of proccessing your input through DeadBand

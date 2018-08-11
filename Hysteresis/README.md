@@ -1,41 +1,71 @@
-# Hysteresis for Arduino
-This library allows you to add some space around switching point of some signal to prevent it from changing rapidly in short time intervals which is useful i.e for water pumps where switching should happen rarely to not destroy the pump.<br /> 
+# Hysteresis
+
+Two state regulator with variable space around switching point. </br>
+Space is set in lowBound and highBound variables. <br/>
+States are set in offVal and onVal variables. <br/>
+When input is above highBound - regulator returns onVal,
+when input is below lowBound - regulator returns offVal,
+otherwise regulator returns previous state.
+## Contents
+| Hysteresis                                                                                                                                                             |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| + offVal: outType<br/> + onVal: outType<br/> + lowBound: inType<br/> + highBound: inType<br/>                                                                          |
+| + begin(inType,inType,outType,outType): void <br/> + reset(): void<br/> + end(): void<br/> + forceOn(): void<br/> + forceOff(): void<br/> + read(inType): outType<br/> |
+
 ## Usage
-Firstly, you need to declare Hysteresis object:
+#### Hysteresis variable initializer:
 ```cpp
-SigUtil::Hysteresis<int, bool> hysteresis(0.04, 0.06, 0, 1); 
-//where <int,bool> is the input and output variable type
-//0.04 is the off trigger (<int>)
-//0.06 is the on trigger (<int>)
-//0 is the off value (<bool>)
-//1 is the on value (<bool>)
+template<typename inType, typename outType>
+Hysteresis;
 ```
-Then you should use:
+**inType:** type of the hysteresis input variable.<br/>
+**outType:** type of the hysteresis output variable.<br/>
+***
+
+#### Clear internal state of hysteresis and set every parameter:
 ```cpp
-boolVal = hysteresis.read(intVal); //(<bool>) expects (<int>)
+void begin(inType _lowBound, inType _highBound, outType _offVal, outType _onVal);
+```
++ **_lowBound:** Below this bound hysteresis goes off
++ **_highBound:** Above this bound hysteresis goes on
++ **offVal:** Value that is returned when hysteresis is off
++ **onVal:** Value that is returned when hysteresis is on
+
+***
+#### Clear internal state of hysteresis:
+```cpp
+void reset();
 ```
 
-## Example
+***
+
+#### Clear internal state of hysteresis and set every parameter to 0:
 ```cpp
-#include <Hysteresis.h>
-int led = 13;
-int pot = A0;
-
-//on led when pot above 512
-//off led when below 256
-//do not change state when between.
-SigUtil::Hysteresis<int,bool> hysteresis(256, 512, 0, 1);
-                                                       
-void setup()
-{
-  pinMode(led,OUTPUT);
-  pinMode(pot,INPUT);
-}
-
-void loop()
-{
-  int potVal = analogRead(pot);
-  bool ledVal = hysteresis.read(potVal);
-  digitalWrite(led, ledVal);
-}
+void end();
 ```
+Sets lowBound, highBound, offVal, onVal to 0
+***
+
+#### Set interlan state of hysteresis:
+```cpp
+void forceOn();
+```
+
+***
+
+#### Clear internal state of hysteresis:
+```cpp
+void forceOff();
+```
+
+***
+
+#### Process given value through hysteresis:
+```cpp
+outType read(inType val);
+```
++ **val:** Value to be processed.
+<br />
+
++ **returns:** Result of hysteresis.
+

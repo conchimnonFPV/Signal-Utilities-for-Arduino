@@ -14,16 +14,15 @@ template<typename T>
 ExponentialRegulator;
 ```
 **T:** type of the regulator's output variable.<br/>
-<br/>
-
+***
 #### Start regulator:
 ```cpp
 void start(T startVal, T stopVal, unsigned long time);
 ```
-**startVal:** start regulation with this value<br/>
-**stopVal:** end regulation with this value<br/>
-**time:** regulation shall take this time (in milliseconds)<br/>
-<br/>
++ **startVal:** start regulation with this value<br/>
++ **stopVal:** end regulation with this value<br/>
++ **time:** regulation shall take this time (in milliseconds)<br/>
+***
 
 #### Stop regulator:
 ```cpp
@@ -31,7 +30,7 @@ void stop();
 ```
 Finishes the task the regulator is currently doing.<br/>
 Doesn't do anything if the regulator is not running.<br/>
-<br/>
+***
 
 #### Pause regulator:
 ```cpp
@@ -39,7 +38,7 @@ void pause();
 ```
 Does not finish the task the regulator is currently doing, but pauses it.<br/>
 Doesn't do anything if the regulator is not running.<br/>
-<br/>
+***
 
 #### Resume regulator:
 ```cpp
@@ -52,18 +51,18 @@ Doesn't do anything if the regulator is not running.<br/>
 ```cpp
 bool running();
 ```
-Returns true if regulator has not finished it's task, even if it's paused.<br/>
-<br/>
++ **returns:** true if regulator has not finished it's task, even if it's paused.<br/>
+***
 
 #### Check whether regulator is paused:
 ```cpp
 bool paused();
 ```
-Returns true if the regulator is paused.<br/>
-<br/>
++ **returns:** true if the regulator is paused.<br/>
+***
 
 #### Get current value from ExponentialRegulator:
 ```cpp
 T read();
 ```
-Computes new value for running regulator. If the regulator is not running, returns the last value it computed when it was running or 0 if the regulator was never started.
++ **returns:** new value for running regulator. If the regulator is not running, returns the last value it computed when it was running or 0 if the regulator was never started.
