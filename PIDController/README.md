@@ -1,67 +1,71 @@
-# PIDController for Arduino
-This library implements basic PID controller.
+# PIDController
+
+
+## Contents
+| PIDController                                                                                                                                                                                                                                                      |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| + kp: double<br/> + ki: double<br/> + kd: double<br/> + dt: unsigned int<br/> + lowerSaturation: returnType<br/> + upperSaturation: returnType<br/> + setPoint: inputType<br/>                                                                                     |
+| + begin(double, double, double, returnType, returnType, unsigned int): void <br/> + reset(): void<br/> + end(): void<br/> + disableIntervalCheck(): void<br/> + enableIntervalCheck(): void<br/> + intervalCheckEnabled(): bool<br/> + read(inputType): returnType |
+
 ## Usage
-Firstly, you should declare PIDController object:
+#### PIDController variable initializer:
 ```cpp
-SigUtil::PIDController<double, int> pid(696.6527, 1/0.956, 0.239, 0, 255, 20);
-//where <int, int> is the input and output type for the controller
-//696.6527 is the Kp (double)
-//1/0.956 is the Ki (double)
-//0.239 is the Kd (double)
-//0 is the bottom saturation for output (<int>)
-//255 is the upper saturation for output (<int>)
-//20 is the interval time in milliseconds (unsigned int)
+template<typename inputType, typename returnType>
+PIDController;
 ```
-then you should your setpoint:
++ **inputType:** Type of pid's process value
++ **returnType:** Type of pid's output value
+***
+#### Set pid's parameters and reset internal state of the controller:
 ```cpp
-pid.setSetpoint(0.03); //(void) expects (<double>)
+void begin(double kp, double ki, double kd, returnType ls, returnType us, unsigned int dt);
 ```
-then get your value:
++ **kp:** Proportional coefficient
++ **ki:** Integral coefficient
++ **kd:** Derivative coefficient
++ **ls:** Lower saturation value
++ **us:** Upper saturation value
++ **dt:** Sampling rate
+
+Sets setpoint to 0.
+***
+#### Set internal state of the controller to 0:
 ```cpp
-controll = pid.read(measured); //(<int>) expects (<double>)
+void reset();
 ```
-You should use read() as often as you can as this library is designed to be used in non-stopping manner.
-
-### Additional functions: <br />
-You can disable internal interval check i.e if you want to use read() inside timer's interrupt routine
+***
+#### Set parameters to 0 and set internal state of the controller to 0:
 ```cpp
-filter.disableIntervalCheck(); //(void) expects nothing
-filter.enableIntervalCheck(); //(void) expects nothins
-filter.intervalCheckEnabled(); //(bool) expects nothing
+void end();
 ```
-Interval check is enabled by default. <br />
-
-you can change your settings while program is running: 
+Sets setpoint to 0.
+***
+#### Disable interval check:
 ```cpp
-pid.setKp(someKp); //(void) expects double
-pid.setKi(someKi); //(void) expects double
-pid.setKd(someKd); //(void) expects double
-pid.setSetpoint(someSP); //(void) expects (<double>)
-pid.getKp(); //(double) expects nothing
-pid.getKi(); //(double) expects nothing
-pid.getKd(); //(double) expects nothing
-pid.getSetpoint(); //(<double>) expects nothing
+void disableIntervalCheck();
 ```
-
-## Example
+Calculations still will be performed on given dt.<br/>
+Useful for calls from timer ISR
+***
+#### Enable interval check:
 ```cpp
-#include <PIDController.h>
-
-int pumppin = 6;
-int distancepin = A0;
-SigUtil::PIDController<int, int> pid(696.6527, 1/0.956, 0.239, 0, 255, 20);
-
-void setup()
-{
-  pinMode(pumppin, OUTPUT);
-  pinMode(distancepin, INPUT);
-  pid.setSetpoint(256);
-}
-
-void loop()
-{
-  int distance = analogRead(distancepin);
-  int pump = pid.read(distance);
-  analogWrite(pumppin,pump);
-}
+void enableIntervalCheck();
 ```
+***
+#### Check whether interval check is enabled:
+```cpp
+bool intervalCheckEnabled();
+```
++ **returns:** True if interval check is enabled
+
+Interval check is enabled by default.
+***
+#### Calculate new pid's output:
+```cpp
+returnType read(inputType pv);
+```
++ **pv:** Process value from the system
+
++ **returns:** pid's output
+***
+

@@ -32,8 +32,10 @@ template <typename T>
 void LinearRegulator<T>::start(T startVal, T _endVal, unsigned long _endTime)
 {
     if (_endTime == 0)
+    {
+        currentVal = _endVal;
         return;
-
+    }
     endVal = _endVal;
     endTime = _endTime;
     currentVal = startVal;
@@ -118,5 +120,5 @@ bool LinearRegulator<T>::paused()
 {
     return isPaused;
 }
-};
+}; // namespace SigUtil
 #endif

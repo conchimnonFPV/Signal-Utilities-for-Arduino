@@ -1,56 +1,63 @@
-# LowPassFilter for Arduino
-This library gives you the ability to filter out unwanted, fast changes from your sensor's readings i.e filter out noise from ultrasonic sensor.
+# LowPassFilter
+
+
+## Contents
+| LowPassFilter                                                                                                                                                                                                         |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| + smoothingFactor: double<br/> + dt: unsigned int                                                                                                                                                                     |
+| + begin(double, unsigned int): void <br/> + reset(): void<br/> + end(): void<br/> + disableIntervalCheck(): void<br/> + enableIntervalCheck(): void<br/> + intervalCheckEnabled(): bool<br/> + read(valType): valType |
 
 ## Usage
-Firstly, you need to declare LowPassFilter object:
+#### ExponentialRegulator variable initializer:
 ```cpp
-SigUtil::LowPassFilter<int> filter(0.2, 20); 
-//where <int> is the variable type expected and returned by the filter
-//0.2 is the smoothig factor (double)
-//20 is the interval time in milliseconds (unsigned int)
+template<typename valType>
+LowPassFilter;
 ```
-Then you should use:
++ **valType:** type on which filter is working on.<br/>
+***
+#### Set parameters to given values and set internal state of the filter to 0:
 ```cpp
-filteredVal = filter.read(someVal); //(<int>) expects (<int>)
+void begin(double sf, unsigned int dt);
 ```
-You should use read() as often as you can as this library is designed to be used in non-stopping manner.
-
-### Additional functions: <br />
-You can disable internal interval check i.e if you want to use read() inside timer's interrupt routine
++ **sf:** Smoothing factor
++ **dt:** Sampling rate
+***
+#### :
 ```cpp
-filter.disableIntervalCheck(); //(void) expects nothing
-filter.enableIntervalCheck(); //(void) expects nothins
-filter.intervalCheckEnabled(); //(bool) expects nothing
+void reset();
 ```
-Interval check is enabled by default. <br />
-
-You can change smoothing factor while program is running by using:
+***
+#### :
 ```cpp
-filter.setSmoothingFactor(someSmoothingFactor); //(void) expects (double)
-filter.getSmoothingFactor(); //(double) expects nothing
+void end();
 ```
-
-## Example
+***
+#### :
 ```cpp
-#include <LowPassFilter.h>
-
-int potpin = A0;
-SigUtil::LowPassFilter<int> filter(0.2, 20);
-
-void setup()
-{
-  pinMode(potpin, INPUT);
-  Serial.begin(9600);
-}
-
-void loop()
-{
-  int val = analogRead(potpin);
-  int filteredVal = filter.read(val);
-  
-  //use plotter to compare both sinals
-  Serial.print(val);
-  Serial.print(" ");
-  Serial.println(filteredVal);
-}
+void disableIntervalCheck();
 ```
+***
+#### :
+```cpp
+void enableIntervalCheck();
+```
+***
+#### :
+```cpp
+bool intervalCheckEnabled();
+```
+**returns:** True if interval check is enabled
+***
+#### ExponentialRegulator variable initializer:
+```cpp
+valType read(valtype input);
+```
++ **input:** Value to filter
+
++ **returns:** Filtered input
+***
+
+
+
+
+
