@@ -1,11 +1,11 @@
-#ifndef EXPONENTIAL_REGULATOR_H
-#define EXPONENTIAL_REGULATOR_H
+#ifndef LINEAR_GENERATOR_H
+#define LINEAR_GENERATOR_H
 
 #include <Arduino.h>
 namespace SigUtil
 {
 template <typename T>
-class ExponentialRegulator
+class LinearGenerator
 {
   private:
     bool isRunning = false;
@@ -29,24 +29,19 @@ class ExponentialRegulator
 };
 
 template <typename T>
-void ExponentialRegulator<T>::start(T startVal, T _endVal, unsigned long _endTime)
+void LinearGenerator<T>::start(T startVal, T _endVal, unsigned long _endTime)
 {
-    if(startVal < 0 || _endVal < 0 || _endTime == 0)
+    if (_endTime == 0)
     {
-        if(_endTime == 0 && _endVal >= 0)
-            currentVal = _endVal;
+        currentVal = _endVal;
         return;
     }
-
     endVal = _endVal;
     endTime = _endTime;
     currentVal = startVal;
 
-    double expStartVal = log(startVal + 1);
-    double expEndVal = log(endVal + 1);
-
-    a = (expEndVal - expStartVal) / endTime;
-    b = expStartVal;
+    a = (double)(endVal - startVal) / endTime;
+    b = (double)startVal;
 
     if (a < 0)
         goingDown = true;
@@ -60,20 +55,20 @@ void ExponentialRegulator<T>::start(T startVal, T _endVal, unsigned long _endTim
 }
 
 template <typename T>
-void ExponentialRegulator<T>::stop()
+void LinearGenerator<T>::stop()
 {
     isPaused = false;
     isRunning = false;
 }
 
 template <typename T>
-void ExponentialRegulator<T>::pause()
+void LinearGenerator<T>::pause()
 {
-    if (!isRunning) //you can't pause a regulator that is not running
+    if (!isRunning) //you can't pause a generator that is not running
         return;
 
     //save remaining time
-    //so if regulator was set to 1000ms and paused at 800
+    //so if generator was set to 1000ms and paused at 800
     //it will take remaining 200ms to finish regulation after resume
     unsigned long currentTime = (unsigned long)(millis() - startTimestamp);
     endTime = (unsigned long)(endTime - currentTime);
@@ -82,9 +77,9 @@ void ExponentialRegulator<T>::pause()
 }
 
 template <typename T>
-void ExponentialRegulator<T>::resume()
+void LinearGenerator<T>::resume()
 {
-    if (!isRunning) //you can't resume a regulator that is not running
+    if (!isRunning) //you can't resume a generator that is not running
         return;
 
     //resume timer from current position
@@ -94,19 +89,18 @@ void ExponentialRegulator<T>::resume()
 }
 
 template <typename T>
-T ExponentialRegulator<T>::read()
+T LinearGenerator<T>::read()
 {
     if (!isRunning || isPaused)
         return currentVal;
 
     unsigned long currentTime = (unsigned long)(millis() - startTimestamp); //get current time
-    double expCurrentVal = a * currentTime + b;                                    //compute linear function
-    currentVal = exp(expCurrentVal) - 1;
+    currentVal = a * currentTime + b;                                       //compute linear function
 
     if (goingDown && currentVal < endVal || !goingDown && currentVal > endVal) //saturate output
         currentVal = endVal;
 
-    if (currentTime >= endTime) //finished timewise so set result to end value and stop the regulator
+    if (currentTime >= endTime) //finished timewise so set result to end value and stop the generator
     {
         currentVal = endVal;
         isRunning = false;
@@ -116,15 +110,15 @@ T ExponentialRegulator<T>::read()
 }
 
 template <typename T>
-bool ExponentialRegulator<T>::running()
+bool LinearGenerator<T>::running()
 {
     return isRunning;
 }
 
 template <typename T>
-bool ExponentialRegulator<T>::paused()
+bool LinearGenerator<T>::paused()
 {
     return isPaused;
 }
-};
+}; // namespace SigUtil
 #endif
