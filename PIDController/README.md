@@ -45,7 +45,7 @@ Sets setpoint to 0.
 void disableIntervalCheck();
 ```
 Calculations still will be performed on given dt.<br/>
-Useful for calls from timer ISR
+Useful for calls from timer ISR.
 ***
 #### Enable interval check:
 ```cpp
@@ -66,6 +66,6 @@ returnType read(inputType pv);
 ```
 + **pv:** Process value from the system
 
-+ **returns:** pid's output
++ **returns:** PID's output
 ***
 

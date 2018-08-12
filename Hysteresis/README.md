@@ -18,8 +18,8 @@ otherwise regulator returns previous state.
 template<typename inType, typename outType>
 Hysteresis;
 ```
-**inType:** type of the hysteresis input variable.<br/>
-**outType:** type of the hysteresis output variable.<br/>
+**inType:** Type of the hysteresis input variable.<br/>
+**outType:** Type of the hysteresis output variable.<br/>
 ***
 
 #### Clear internal state of hysteresis and set every parameter:
@@ -43,7 +43,7 @@ void reset();
 ```cpp
 void end();
 ```
-Sets lowBound, highBound, offVal, onVal to 0
+Sets lowBound, highBound, offVal, onVal to 0.
 ***
 
 #### Set interlan state of hysteresis:
@@ -64,8 +64,8 @@ void forceOff();
 ```cpp
 outType read(inType val);
 ```
-+ **val:** Value to be processed.
++ **val:** Value to be processed
 <br />
 
-+ **returns:** Result of hysteresis.
++ **returns:** Result of hysteresis
 

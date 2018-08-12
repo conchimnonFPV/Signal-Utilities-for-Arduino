@@ -34,7 +34,7 @@ void end();
 ```cpp
 T read(T input);
 ```
-+ **input:** your input value<br/>
++ **input:** input value<br/>
 
 
-+ **returns:** result of proccessing your input through DeadBand
++ **returns:** Result of proccessing input value through DeadBand

@@ -13,15 +13,15 @@ Changes value from initial to final in given time in exponential manner.
 template<typename T>
 ExponentialRegulator;
 ```
-**T:** type of the regulator's output variable.<br/>
+**T:** Type of the regulator's output variable.<br/>
 ***
 #### Start regulator:
 ```cpp
 void start(T startVal, T stopVal, unsigned long time);
 ```
-+ **startVal:** start regulation with this value<br/>
-+ **stopVal:** end regulation with this value<br/>
-+ **time:** regulation shall take this time (in milliseconds)<br/>
++ **startVal:** Start regulation with this value<br/>
++ **stopVal:** End regulation with this value<br/>
++ **time:** Regulation shall take this time (in milliseconds)<br/>
 ***
 
 #### Stop regulator:
@@ -58,11 +58,11 @@ bool running();
 ```cpp
 bool paused();
 ```
-+ **returns:** true if the regulator is paused.<br/>
++ **returns:** True if the regulator is paused.<br/>
 ***
 
 #### Get current value from ExponentialRegulator:
 ```cpp
 T read();
 ```
-+ **returns:** new value for running regulator. If the regulator is not running, returns the last value it computed when it was running or 0 if the regulator was never started.
++ **returns:** New value for running regulator. If the regulator is not running, returns the last value it computed when it was running or 0 if the regulator was never started.
