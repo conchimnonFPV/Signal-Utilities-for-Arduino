@@ -5,12 +5,12 @@ Read returns true only if desired change in signal has been detected.
 | EdgeDetector                                     |
 |--------------------------------------------------|
 | + edgeType: uint8_t                              |
-| + begin(bool): void<br/> + reset(): void<br/> + end(): void<br/> + read(bool): bool<br/> |
+| + begin(uint8_t): void<br/> + reset(): void<br/> + end(): void<br/> + read(bool): bool<br/> |
 
 ## Usage
 #### Set edgeType to given value:
 ```cpp
-void begin(bool edgeType);
+void begin(uint8_t edgeType);
 ```
 + **edgeType:** Edge to look for (HIGH/LOW/BOTH)<br/>
 ***
