@@ -107,22 +107,22 @@ returnType PIDController<inputType, returnType>::read(inputType pv)
         //saturation and integral clamping
         if (controllVal > upperSaturation)
         {
-            controllVal = upperSaturation;//saturate output
-
             //this if statement is experimental
             //apparently this metod (if I implemented it properly) is proven to be the best
             //method of integral clamping
             //but still it needs some testing
             if(err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
                 integral = integral - err*(inputType)dt;//revert changes to integral made in this iteration
+          
+            controllVal = upperSaturation;//saturate output
         }
         else if (controllVal < lowerSaturation)
         {
-            controllVal = lowerSaturation;
-
             //same as above
             if(err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
                 integral = integral - err*(inputType)dt;
+          
+            controllVal = lowerSaturation;
         }
 
         //save current stuff for next iteration
