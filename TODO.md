@@ -5,3 +5,4 @@
 + add getters and setters
 + add integrator and derivative
 + make stuff variable step time
++ remove sampling time from low pass filter
