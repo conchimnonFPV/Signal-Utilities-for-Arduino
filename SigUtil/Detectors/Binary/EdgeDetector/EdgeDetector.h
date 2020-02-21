@@ -3,34 +3,39 @@
 
 #include <Arduino.h>
 #define BOTH 2
+
 namespace SigUtil
+{
+namespace Detectors
+{
+namespace Digital
 {
 class EdgeDetector
 {
-  private:
-    bool previousState = 0;
+private:
+  bool previousState = 0;
 
-  public:
-    uint8_t edgeType = LOW;
-    void begin(uint8_t etype){edgeType = etype;};
-    void reset(){previousState = 0;};
-    void end(){reset();edgeType=LOW;};
-    bool read(bool input);
-};
+public:
+  const uint8_t edgeType = LOW;
 
-bool EdgeDetector::read(bool input)
-{
+  EdgeDetector(uint8_t etype) : edgeType(etype) {}
+
+  bool read(bool input)
+  {
     bool r = 0;
     if (!previousState && input && (edgeType == HIGH || edgeType == BOTH))
     {
-        r = 1;
+      r = 1;
     }
     else if (previousState && !input && (edgeType == LOW || edgeType == BOTH))
     {
-        r = 1;
+      r = 1;
     }
     previousState = input;
     return r;
-}
+  }
+};
+} // namespace Binary
+} // namespace Detectors
 } // namespace SigUtil
 #endif
