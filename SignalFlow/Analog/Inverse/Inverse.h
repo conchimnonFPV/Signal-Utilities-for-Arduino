@@ -10,14 +10,15 @@ namespace Analog
 class Inverse
 {
 public:
-    const float minVal = 0;
-    const float maxVal = 255;
-
-    Inverse(float _minVal = 0, float _maxVal = 255) : minVal(_minVal), maxVal(_maxVal) {}
+    const float maxVal = 1;
+    const float offset = 0;
+    Inverse(float _minVal = 1, float _maxVal = 1) : 
+     maxVal(_maxVal-_minVal),
+     offset(2*_minVal) {}
 
     float read(float val) const
     {
-        return val = (maxVal - minVal) - val;
+        return maxVal - val + offset;
     }
 };
 } // namespace Analog

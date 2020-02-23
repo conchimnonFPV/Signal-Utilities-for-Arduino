@@ -10,13 +10,29 @@ namespace Generators
 {
 namespace Analog
 {
+/**
+ * \brief Generator that generates exponential signal from one value to another in given time.
+ */
 class SigUtil::Generators::Analog::AbstractAnalogGenerator : ExponentialGenerator
 {
 private:
     double a, b;
 
 public:
+    /**
+     * \brief Start the generator.
+     *
+     * \param startval Value the generator will start from.
+     * \param endval Value the generator will finish on.
+     * \param timeval Time in milliseconds to generate exponential signal from startval to endval
+     */ 
     void start(float startval, float endval, unsigned long timeval);
+
+    /**
+     * \brief Get current value from the generator.
+     * 
+     * When generator is not working (either stopped, paused or finished) then value doesn't change.
+     */
     float read();
 };
 

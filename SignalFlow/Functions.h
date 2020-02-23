@@ -28,12 +28,12 @@ float saturation(float val, float min = 0, float max = 255)
 
 float inverse(float val, float min = 0, float max = 255)
 {
-    return val = (max - min) - val;
+    float offset = 2* min;
+    max = max - min;
+    return max - val + offset;
 }
 
-namespace Experimental
-{
-float toExponential(float val, float min, float max)
+float exponential(float val, float min, float max)
 {
     if (val == min)
         return min;
@@ -50,7 +50,6 @@ float toExponential(float val, float min, float max)
     double expVal = a * val + b;
     return exp(expVal) - 1;
 }
-} // namespace Experimental
 } // namespace Analog
 } // namespace Functions
 } // namespace SigUtil
