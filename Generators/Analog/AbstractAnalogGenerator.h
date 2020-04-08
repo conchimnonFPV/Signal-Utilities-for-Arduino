@@ -9,6 +9,9 @@ namespace Generators
 {
 namespace Analog
 {
+/**
+* \brief Abstract generator.
+*/
 class AbstractAnalogGenerator
 {
 private:
@@ -22,12 +25,49 @@ private:
     float endVal;
 
 public:
+    /**
+     * \brief Start the generator.
+     *
+     * \param startval Value the generator will start from.
+     * \param endval Value the generator will finish on.
+     * \param timeval Time in milliseconds to generate some signal from startval to endval
+     */ 
     virtual void start(float startval, float endval, unsigned long timeval) = 0;
+
+    /**
+     * \brief Stop the generator.
+     */
     void stop();
+
+    /**
+     * \brief Pause the generator.
+     */
     void pause();
+
+    /**
+     * \brief Resume the generator.
+     */
     void resume();
+
+    /**
+     * \brief Check if generator is still running.
+     * 
+     * \return True if generator is still running.
+     */
     bool running() const;
+
+    /**
+     * \brief Check if generator is paused.
+     * 
+     * \return True if generator is paused.
+     */
     bool paused() const;
+
+    /**
+     * \brief Get current value from the generator.
+     * 
+     * When generator is not working (either stopped, paused or finished) then value doesn't change.
+     */
     virtual float read() = 0;
 };
 

@@ -7,6 +7,9 @@ namespace SignalFlow
 {
 namespace Analog
 {
+/**
+ * \brief Integrator with saturation.
+ */
 class Integrator
 {
 private:
@@ -14,21 +17,37 @@ private:
     unsigned long previousTime = 0;
 
 public:
-    const float lowerSat = -1 * INFINITY;
-    const float upperSat = INFINITY;
-    const unsigned int dt = 1;
+    const float lowerSat = -1 * INFINITY;//!< Lower saturation value.
+    const float upperSat = INFINITY;//!< Upper saturation value.
+    const unsigned int dt = 1;//!< Sampling time.
 
+    /**
+     * \brief Class constructor.
+     * 
+     * \param ls Lower saturation value.
+     * \param us Upper saturation value.
+     * \param _dt Sampling time.
+     */
     Integrator(float ls = -1 * INFINITY, float us = INFINITY, unsigned int _dt = 1) : lowerSat(ls), upperSat(us), dt(_dt)
     {
         reset();
     }
 
+    /**
+     * \brief Reset internal state of Integrator.
+     */
     void reset()
     {
         previousTime = millis();
         integral = 0;
     }
 
+    /**
+     * \brief Get current value from integrator
+     * 
+     * \param signal Input signal for integrator.
+     * \return Current value of the integrator.
+     */
     float read(float signal)
     {
         unsigned long currentTime = millis();

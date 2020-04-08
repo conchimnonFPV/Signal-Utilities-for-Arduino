@@ -10,7 +10,7 @@ namespace Controllers
 namespace Analog
 {
 /**
- * \brief PID controller with saturation and integral anti windup 
+ * \brief PID controller with saturation and integral anti windup.
  */
 class PIDController
 {
@@ -18,18 +18,16 @@ private:
     unsigned long previousTime = 0;
     double previousErr = 0;
     double integral = 0;
-    float previousControllVal = 0;
+    double previousControllVal = 0;
 
     double kp = 0;
     double ki = 0;
     double kd = 0;
 
-    float setpoint = 0;
-
 public:
     const unsigned int dt = 1; //!< Delta time.
-    const float lowerSaturation = INFINITY; //!< Maximum value that integrator may have.
-    const float upperSaturation = -1 * INFINITY; //!< Minimum value that integrator may have.
+    const double lowerSaturation = INFINITY; //!< Maximum value that integrator may have.
+    const double upperSaturation = -1 * INFINITY; //!< Minimum value that integrator may have.
 
     /**
     * \brief Class constructor.
@@ -39,9 +37,9 @@ public:
     * \param _kd Derivative gain.
     * \param ls Lower saturation value.
     * \param us Upper saturation value.
-    * \param _dt Delta time in milliseconds
+    * \param _dt Delta time in milliseconds.
     */
-    PIDController(double _kp, double _ki, double _kd, float ls = -1 * INFINITY, float us = INFINITY, unsigned int _dt = 1) : kp(_kp), ki(_ki), kd(_kd), lowerSaturation(ls), upperSaturation(us), dt(_dt != 0 ? _dt : 1)
+    PIDController(double _kp, double _ki, double _kd, double ls = -1 * INFINITY, double us = INFINITY, unsigned int _dt = 1) : kp(_kp), ki(_ki), kd(_kd), lowerSaturation(ls), upperSaturation(us), dt(_dt != 0 ? _dt : 1)
     {
         reset();
     }
@@ -52,19 +50,17 @@ public:
     void reset();
 
     /**
-     * \brief Receive control signal based o setpoint and process value
+     * \brief Receive control signal based on error value
      * 
-     * \param pv Process value.
+     * \param err Error value.
      * \return Control value.
      */
-    float read(float pv);
+    double read(double err);
 
-    void setSetpoint(float newSp) { setpoint = newSp; }
     void setKp(double newKp) { kp = newKp; }
     void setKi(double newKi) { ki = newKi; }
     void setKd(double newKd) { kd = newKd; }
 
-    float getSetpoint() { return setpoint; }
     double getKp() { return kp; }
     double getKi() { return ki; }
     double getKd() { return kd; }
@@ -78,17 +74,16 @@ void PIDController::reset()
     previousControllVal = 0;
 }
 
-float PIDController::read(float pv)
+double PIDController::read(double err)
 {
     unsigned long currentTime = millis();
     unsigned long diff = currentTime - previousTime;
     if (diff >= dt)
     {
         //basic pid computing
-        double err = setpoint - pv;
-        integral = integral + err * ((float)diff / (float)1000);
-        double derivative = (err - previousErr) / ((float)diff / (float)1000);
-        float controllVal = kp * err + ki * integral + kd * derivative;
+        integral = integral + err * ((double)diff / (double)1000);
+        double derivative = (err - previousErr) / ((double)diff / (double)1000);
+        double controllVal = kp * err + ki * integral + kd * derivative;
 
         //saturation and integral clamping
         if (controllVal > upperSaturation)
@@ -98,7 +93,7 @@ float PIDController::read(float pv)
             //method of integral clamping
             //but still it needs some testing
             if (err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
-                integral = integral - err * ((float)diff / (float)1000); //revert changes to integral made in this iteration
+                integral = integral - err * ((double)diff / (double)1000); //revert changes to integral made in this iteration
 
             controllVal = upperSaturation; //saturate output
         }
@@ -106,7 +101,7 @@ float PIDController::read(float pv)
         {
             //same as above
             if (err > 0 && controllVal > 0 || err < 0 && controllVal < 0)
-                integral = integral - err * ((float)diff / (float)1000);
+                integral = integral - err * ((double)diff / (double)1000);
 
             controllVal = lowerSaturation;
         }

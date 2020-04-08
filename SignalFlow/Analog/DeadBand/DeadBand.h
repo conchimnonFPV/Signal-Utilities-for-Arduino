@@ -27,6 +27,7 @@ public:
      * \brief Pass value through DeadBand object
      * 
      * \param val Value to be passed through.
+     * \return Filtered value.
      */
     float read(float val) const
     {

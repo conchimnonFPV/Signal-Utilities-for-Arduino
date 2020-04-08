@@ -9,6 +9,14 @@ namespace Functions
 {
 namespace Analog
 {
+/**
+ * \brief Suppress signal when it's in given range.
+ * 
+ * \param val Value to be passed through deadband.
+ * \param lowBound Output signal is 0 when signal is above this value.
+ * \param highBund Output signal is 0 when signal is below this value.
+ * \return Filtered value.
+ */
 float deadband(float val, float lowBound, float highBound)
 {
     if (val >= highBound || val <= lowBound)
@@ -17,34 +25,58 @@ float deadband(float val, float lowBound, float highBound)
     return 0;
 }
 
-float saturation(float val, float min = 0, float max = 255)
+/**
+ * \brief Saturate given input.
+ * 
+ * \param val Input to be saturated.
+ * \param minv Min output value.
+ * \param maxv Max output value.
+ * \return Saturated input.
+ */
+float saturation(float val, float minv = 0, float maxv = 255)
 {
-    if (val > max)
-        val = max;
-    else if (val < min)
-        val = min;
+    if (val > maxv)
+        val = maxv;
+    else if (val < minv)
+        val = minv;
     return val;
 }
 
-float inverse(float val, float min = 0, float max = 255)
+/**
+ * \brief Invert given signal
+ * 
+ * i.e change 255 to 0 and vice versa.
+ * 
+ * \param val Input signal.
+ * \param minv Min value of the signal.
+ * \param maxv Max value of the signal
+ * \return Inverted signal.
+ */
+float inverse(float val, float minv = 0, float maxv = 255)
 {
-    float offset = 2* min;
-    max = max - min;
-    return max - val + offset;
+    return maxv - val + minv;
 }
 
-float exponential(float val, float min, float max)
+/**
+ * \brief Translate linear signal into exponential signal.
+ * 
+ * \param val Value to be translated.
+ * \param minv Lower boundary of the signal.
+ * \param maxv Upper boundary of the signal.
+ * \return Translated signal.
+ */
+float exponential(float val, float minv, float maxv)
 {
-    if (val == min)
-        return min;
-    else if (val == max)
-        return max;
-    else if (min < 0 || max < 0)
+    if (val == minv)
+        return minv;
+    else if (val == maxv)
+        return maxv;
+    else if (minv < 0 || maxv < 0)
         return 0;
 
-    double expMin = log(min + 1);
-    double expMax = log(max + 1);
-    double a = (expMax - expMin) / (max - min);
+    double expMin = log(minv + 1);
+    double expMax = log(maxv + 1);
+    double a = (expMax - expMin) / (maxv - minv);
     double b = expMin;
 
     double expVal = a * val + b;

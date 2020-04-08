@@ -8,4 +8,3 @@
 + add butterworth filter
 + add threshold detector
 + add tri-state controller
-+ add Exponential class

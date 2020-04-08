@@ -3,7 +3,8 @@
 This is a collection of libraries that provide some useful functionality for signal processing. The libraries are organised in the following manner:
 * **Controllers** - Generate control signal based on given variables.
     * **Analog**
-        * **PIDController** - PID controller with saturation and integral anti-windup
+        * **PIDController** - PID controller with saturation and integral anti-windup.
+        * **TwoStateController** - Simple two state controller.
 * **Detectors** - Generate single boolean pulse when some change in signal is detected, i.e when change from binary 0 to 1 is detected.
     * **Binary**
         * **EdgeDetector** - Detects change in digital signal
