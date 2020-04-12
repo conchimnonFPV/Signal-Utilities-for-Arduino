@@ -1,7 +1,6 @@
 #ifndef EDGE_DETECTOR_H
 #define EDGE_DETECTOR_H
 
-#include <Arduino.h>
 #define BOTH 2
 
 namespace SigUtil

@@ -14,11 +14,10 @@ namespace Analog
 */
 class AbstractAnalogGenerator
 {
-private:
+protected:
     bool isRunning = false;
     bool isPaused = false;
     bool goingDown = false;
-
     unsigned long startTimestamp;
     unsigned long endTime;
     float currentVal = 0;
@@ -54,14 +53,14 @@ public:
      * 
      * \return True if generator is still running.
      */
-    bool running() const;
+    bool running() const {return isRunning;}
 
     /**
      * \brief Check if generator is paused.
      * 
      * \return True if generator is paused.
      */
-    bool paused() const;
+    bool paused() const {return isPaused;}
 
     /**
      * \brief Get current value from the generator.
@@ -102,15 +101,6 @@ void AbstractAnalogGenerator::resume()
     start(currentVal, endVal, endTime);
 }
 
-bool AbstractAnalogGenerator::running()
-{
-    return isRunning;
-}
-
-bool AbstractAnalogGenerator::paused()
-{
-    return isPaused;
-}
 } // namespace Analog
 } // namespace Generators
 } // namespace SigUtil

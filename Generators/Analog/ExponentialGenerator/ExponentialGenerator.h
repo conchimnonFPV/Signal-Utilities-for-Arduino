@@ -13,7 +13,7 @@ namespace Analog
 /**
  * \brief Generator that generates exponential signal from one value to another in given time.
  */
-class SigUtil::Generators::Analog::AbstractAnalogGenerator : ExponentialGenerator
+class ExponentialGenerator : SigUtil::Generators::Analog::AbstractAnalogGenerator
 {
 private:
     double a, b;

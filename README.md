@@ -6,7 +6,7 @@ This is a collection of libraries that provide some useful functionality for sig
         * **PIDController** - PID controller with saturation and integral anti-windup.
         * **TwoStateController** - Simple two state controller.
 * **Detectors** - Generate single boolean pulse when some change in signal is detected, i.e when change from binary 0 to 1 is detected.
-    * **Binary**
+    * **Digital**
         * **EdgeDetector** - Detects change in digital signal
 * **Generators** - Generate some signal over time, i.e ramp signal.
     * **Analog**
@@ -33,3 +33,5 @@ Libraries are written in following way:
 * Classes that have some internal state such as PID or filters have a reset() function to reset said state.
 * Stateless signal flow classes have corresponding function in "SigUtil/SignalFlow/Functions.h", i.e Saturation class have saturate() function.
 * Classes that have some integration functionality are saturated. By default saturation region is set to infinity and -infinity.
+
+This folder must be placed inside sketch_folder/src/ directory because the Arduino IDE does not support nested headers in it's "libraries" folder.
