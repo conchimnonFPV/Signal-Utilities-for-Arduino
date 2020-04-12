@@ -34,4 +34,4 @@ Libraries are written in following way:
 * Stateless signal flow classes have corresponding function in "SigUtil/SignalFlow/Functions.h", i.e Saturation class have saturate() function.
 * Classes that have some integration functionality are saturated. By default saturation region is set to infinity and -infinity.
 
-This folder must be placed inside sketch_folder/src/ directory because the Arduino IDE does not support nested headers in it's "libraries" folder.
+This folder must be placed inside sketch_folder/src/ directory because Arduino IDE does not support nested headers in it's "libraries" folder.
