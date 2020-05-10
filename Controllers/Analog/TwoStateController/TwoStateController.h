@@ -19,8 +19,8 @@ private:
 public:
     const float offValue = 0; //!< Output when error is below bottomSwitchBoundary.
     const float onValue = 0;  //!< Output when error is above topSwitchBoundary.
-    const float bottomSwitchBoundary = 0;//!< Value below which regulator switches to off value.
-    const float topSwitchBoundary = 0;//!< Value above which regulator switches to on value.
+    const float bottomSwitchBoundary = 0;//!< Error value below which regulator switches to off value.
+    const float topSwitchBoundary = 0;//!< Error value above which regulator switches to on value.
 
     /**
      * \brief Class constructor.
