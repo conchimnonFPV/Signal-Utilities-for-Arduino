@@ -17,20 +17,20 @@ private:
     float on = false;
 
 public:
-    const float offValue = 0; //!< Output when regulator is in disabled state.
-    const float onValue = 0;  //!< Output when regulator is in enabled state.
-    const float lowSwitchState = 0;//!< Value when regulator switches to low state.
-    const float highSwitchState = 0;//!< Value when regulator switches to high state.
+    const float offValue = 0; //!< Output when error is below bottomSwitchBoundary.
+    const float onValue = 0;  //!< Output when error is above topSwitchBoundary.
+    const float bottomSwitchBoundary = 0;//!< Value below which regulator switches to off value.
+    const float topSwitchBoundary = 0;//!< Value above which regulator switches to on value.
 
     /**
      * \brief Class constructor.
      * 
      * \param _offValue Output when regulator is in disabled state.
      * \param _onValue Output when regulator is in enabled state.
-     * \param _lowSwitchState Value when regulator switches to low state.
-     * \param _highSwitchState Value when regulator switches to high state.
+     * \param bottomSwitchBoundary Value when regulator switches to low state.
+     * \param topSwitchBoundary Value when regulator switches to high state.
      */
-    TwoStateController(float _offValue, float _onValue, float _lowSwitchState, float _highSwitchState) : offValue(_offValue), onValue(_onValue), lowSwitchState(_lowSwitchState), highSwitchState(_highSwitchState) {}
+    TwoStateController(float _offValue, float _onValue, float _bottomSwitchBoundary, float _topSwitchBoundary) : offValue(_offValue), onValue(_onValue), bottomSwitchBoundary(_bottomSwitchBoundary), topSwitchBoundary(_topSwitchBoundary) {}
 
     /**
      * \brief Reset internal state of the controller.
@@ -46,9 +46,9 @@ public:
     float read(float pv)
     {
         float err = setpoint - pv;
-        if (err >= highSwitchState)
+        if (err >= topSwitchBoundary)
             on = true;
-        else if (err <= lowSwitchState)
+        else if (err <= bottomSwitchBoundary)
             on = false;
 
         if (on)
