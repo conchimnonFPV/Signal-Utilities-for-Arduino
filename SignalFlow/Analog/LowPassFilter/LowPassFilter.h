@@ -1,8 +1,6 @@
 #ifndef LOW_PASS_FILTER_H
 #define LOW_PASS_FILTER_H
 
-#include <Arduino.h>
-
 namespace SigUtil
 {
 namespace SignalFlow
