@@ -68,7 +68,7 @@ float LinearGenerator::read()
     unsigned long currentTime = (unsigned long)(millis() - startTimestamp); //get current time
     currentVal = a * currentTime + b;                                       //compute linear function
 
-    if (goingDown && currentVal < endVal || !goingDown && currentVal > endVal) //saturate output
+    if ((goingDown && currentVal < endVal) || (!goingDown && currentVal > endVal)) //saturate output
         currentVal = endVal;
 
     if (currentTime >= endTime) //finished timewise so set result to end value and stop the generator
