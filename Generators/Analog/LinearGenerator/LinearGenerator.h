@@ -13,7 +13,7 @@ namespace Analog
 /**
  * \brief Generator that generates linear signal from one value to another in given time.
  */
-class LinearGenerator : SigUtil::Generators::Analog::AbstractAnalogGenerator
+class LinearGenerator : public SigUtil::Generators::Analog::AbstractAnalogGenerator
 {
 private:
     double a, b;
